@@ -1,0 +1,4 @@
+services:
+#    factura.example:
+#        class: OE\FacturaBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
