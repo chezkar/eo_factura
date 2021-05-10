@@ -24,7 +24,7 @@ class Producto
     /**
      * @var string
      *
-     * @ORM\Column(name="productoCodigo", type="string", length=45, precision=0, scale=0, nullable=false, unique=false)
+     * @ORM\Column(name="productoCodigo", type="string", length=45, precision=0, scale=0, nullable=false, unique=true)
      */
     private $productocodigo;
 
@@ -54,14 +54,14 @@ class Producto
      *
      * @ORM\Column(name="createAt", type="datetime", precision=0, scale=0, nullable=false, options={"default"="CURRENT_TIMESTAMP"}, unique=false)
      */
-    private $createat = 'CURRENT_TIMESTAMP';
+    private $createat;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="updateAt", type="datetime", precision=0, scale=0, nullable=false, options={"default"="CURRENT_TIMESTAMP"}, unique=false)
      */
-    private $updateat = 'CURRENT_TIMESTAMP';
+    private $updateat;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -69,6 +69,12 @@ class Producto
      * @ORM\OneToMany(targetEntity="OE\FacturaBundle\Entity\DetalleFactura", mappedBy="productoIdproducto", cascade={"persist"})
      */
     private $facturas;
+
+
+    public function __construct() {
+        $this->setCreateat(new \DateTime());
+        $this->setUpdateAt(new \DateTime());
+    }
 
 
 

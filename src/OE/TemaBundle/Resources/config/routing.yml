@@ -1,0 +1,3 @@
+tema_homepage:
+    path:     /
+    defaults: { _controller: TemaBundle:Default:index }

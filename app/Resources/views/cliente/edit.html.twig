@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title_button %}
+    <h1 class="h3 mb-0 text-gray-800">Clientes</h1>
+    <a href="{{ path('cliente_index') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-undo fa-sm text-white-50"></i> Regresar</a>
+{% endblock %}
+
+{% block body %}
+    {{ form_start(edit_form, {'attr': {'class': 'user'}, 'multipart': true }) }}
+        {{ form_widget(edit_form) }}
+        </br>
+        <button type="submit" class="btn btn-info btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-pen"></i>
+            </span>
+            <span class="text">EDITAR</span>
+        </button>
+    {{ form_end(edit_form) }}
+{% endblock %}

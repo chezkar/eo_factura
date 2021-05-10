@@ -1,3 +1,15 @@
 factura_homepage:
     path:     /
     defaults: { _controller: FacturaBundle:Default:index }
+
+factura_producto:
+    resource: "@FacturaBundle/Resources/config/routing/producto.yml"
+    prefix:   /producto
+
+factura_cliente:
+    resource: "@FacturaBundle/Resources/config/routing/cliente.yml"
+    prefix:   /cliente
+
+factura_factura:
+    resource: "@FacturaBundle/Resources/config/routing/factura.yml"
+    prefix:   /factura

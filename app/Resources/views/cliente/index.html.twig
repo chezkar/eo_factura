@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title_button %}
+    <h1 class="h3 mb-0 text-gray-800">Clientes</h1>
+    <a href="{{ path('cliente_new') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-user-plus fa-sm text-white-50"></i> Nuevo</a>
+{% endblock %}
+
+{% block body %}
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>NIT</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.clientenit }}</td>
+                <td>{{ cliente.clienteapellido }}, {{ cliente.clientenombre }}</td>
+                <td>{{ cliente.clientedireccion }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('cliente_show', { 'idcliente': cliente.idcliente }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('cliente_edit', { 'idcliente': cliente.idcliente }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

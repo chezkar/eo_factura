@@ -3,7 +3,7 @@ factura:
     prefix:   /
 
 theme:
-    resource: "@ThemeBundle/Resources/config/routing.yml"
+    resource: "@TemaBundle/Resources/config/routing.yml"
     prefix:   /
 
 app:

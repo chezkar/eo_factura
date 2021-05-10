@@ -54,14 +54,21 @@ class Cliente
      *
      * @ORM\Column(name="updateAt", type="datetime", precision=0, scale=0, nullable=false, options={"default"="CURRENT_TIMESTAMP"}, unique=false)
      */
-    private $updateat = 'CURRENT_TIMESTAMP';
+    private $updateat;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="createAt", type="datetime", precision=0, scale=0, nullable=false, options={"default"="CURRENT_TIMESTAMP"}, unique=false)
      */
-    private $createat = 'CURRENT_TIMESTAMP';
+    private $createat;
+
+
+    public function __construct() {
+        $this->setCreateat(new \DateTime());
+        $this->setUpdateAt(new \DateTime());
+    }
+
 
 
 

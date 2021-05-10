@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title_button %}
+    <h1 class="h3 mb-0 text-gray-800">Productos</h1>
+    <a href="{{ path('producto_new') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-user-plus fa-sm text-white-50"></i> Nuevo</a>
+{% endblock %}
+
+{% block body %}
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ISBN/CÓDIGO</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Observaciones</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for producto in productos %}
+            <tr>
+                <td>{{ producto.productocodigo }}</td>
+                <td>{{ producto.productodescripcion }}</td>
+                <td>{{ producto.productoprecio }}</td>
+                <td>{{ producto.productoobservaciones }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('producto_show', { 'idproducto': producto.idproducto }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('producto_edit', { 'idproducto': producto.idproducto }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>    
+{% endblock %}

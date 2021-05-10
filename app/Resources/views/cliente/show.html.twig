@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Cliente</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Idcliente</th>
+                <td>{{ cliente.idcliente }}</td>
+            </tr>
+            <tr>
+                <th>Clientenit</th>
+                <td>{{ cliente.clientenit }}</td>
+            </tr>
+            <tr>
+                <th>Clientenombre</th>
+                <td>{{ cliente.clientenombre }}</td>
+            </tr>
+            <tr>
+                <th>Clienteapellido</th>
+                <td>{{ cliente.clienteapellido }}</td>
+            </tr>
+            <tr>
+                <th>Clientedireccion</th>
+                <td>{{ cliente.clientedireccion }}</td>
+            </tr>
+            <tr>
+                <th>Updateat</th>
+                <td>{% if cliente.updateat %}{{ cliente.updateat|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Createat</th>
+                <td>{% if cliente.createat %}{{ cliente.createat|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('cliente_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('cliente_edit', { 'idcliente': cliente.idcliente }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
