@@ -236,7 +236,7 @@ class Producto
      * Add facturas
      *
      * @param \OE\FacturaBundle\Entity\DetalleFactura $facturas
-     * @return Charge
+     * @return Producto
      */
     public function addFactura(\OE\FacturaBundle\Entity\DetalleFactura $facturas)
     {
@@ -263,5 +263,10 @@ class Producto
     public function getFacturas()
     {
         return $this->facturas;
+    }
+
+    public function __toString()
+    {
+        return $this->productocodigo.' '.$this->productodescripcion;
     }
 }

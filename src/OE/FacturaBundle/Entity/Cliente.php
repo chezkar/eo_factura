@@ -225,4 +225,9 @@ class Cliente
     {
         return $this->createat;
     }
+
+    public function __toString()
+    {
+        return $this->clientenombre.' '.$this->clienteapellido;
+    }
 }

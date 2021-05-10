@@ -38,7 +38,7 @@ class DetalleFactura
     /**
      * @var \OE\FacturaBundle\Entity\Factura
      *
-     * @ORM\ManyToOne(targetEntity="OE\FacturaBundle\Entity\Factura")
+     * @ORM\ManyToOne(targetEntity="OE\FacturaBundle\Entity\Factura", inversedBy="productos", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="factura_idfactura", referencedColumnName="idfactura", nullable=true)
      * })

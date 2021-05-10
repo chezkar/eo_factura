@@ -36,6 +36,13 @@ class Factura
     private $facturafecha;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="facturaTotal", type="float", precision=10, scale=0, nullable=false, unique=false)
+     */
+    private $facturatotal;
+
+    /**
      * @var \OE\FacturaBundle\Entity\Cliente
      *
      * @ORM\ManyToOne(targetEntity="OE\FacturaBundle\Entity\Cliente")
@@ -44,6 +51,18 @@ class Factura
      * })
      */
     private $clienteIdcliente;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="OE\FacturaBundle\Entity\DetalleFactura", mappedBy="facturaIdfactura", cascade={"persist"})
+     */
+    private $productos;
+
+    public function __construct()
+    {
+        $this->productos = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
 
 
@@ -106,6 +125,30 @@ class Factura
     }
 
     /**
+     * Set facturatotal.
+     *
+     * @param float $facturatotal
+     *
+     * @return Factura
+     */
+    public function setFacturatotal($facturatotal)
+    {
+        $this->facturatotal = $facturatotal;
+
+        return $this;
+    }
+
+    /**
+     * Get facturatotal.
+     *
+     * @return float
+     */
+    public function getFacturatotal()
+    {
+        return $this->facturatotal;
+    }
+
+    /**
      * Set clienteIdcliente.
      *
      * @param \OE\FacturaBundle\Entity\Cliente|null $clienteIdcliente
@@ -127,5 +170,39 @@ class Factura
     public function getClienteIdcliente()
     {
         return $this->clienteIdcliente;
+    }
+
+
+    /**
+     * Add productos
+     *
+     * @param \OE\FacturaBundle\Entity\DetalleFactura $productos
+     * @return Factura
+     */
+    public function addProducto(\OE\FacturaBundle\Entity\DetalleFactura $productos)
+    {
+        $this->productos[] = $productos;
+
+        return $this;
+    }
+
+    /**
+     * Remove productos
+     *
+     * @param \OE\FacturaBundle\Entity\DetalleFactura $productos
+     */
+    public function removeProducto(\OE\FacturaBundle\Entity\DetalleFactura $productos)
+    {
+        $this->productos->removeElement($productos);
+    }
+
+    /**
+     * Get productos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProductos()
+    {
+        return $this->productos;
     }
 }

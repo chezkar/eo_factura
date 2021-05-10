@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 class DetalleFacturaType extends AbstractType
 {
     /**
@@ -13,7 +15,15 @@ class DetalleFacturaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('detallecantidad')->add('detalletotal')->add('facturaIdfactura')->add('productoIdproducto');
+        $builder
+            ->add('productoIdproducto', EntityType::class, array(
+                'label' => 'Producto',
+                'placeholder' => 'Seleccione el producto',
+                'class' => 'FacturaBundle:Producto'
+            ))
+            ->add('detallecantidad')
+            ->add('detalletotal')
+            ;
     }/**
      * {@inheritdoc}
      */

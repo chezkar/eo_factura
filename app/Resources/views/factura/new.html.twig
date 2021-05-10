@@ -1,16 +1,142 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block _oe_facturabundle_factura_productos_entry_widget %}
+    {{ form_row(form.productoIdproducto) }}
+    {{ form_row(form.detallecantidad) }}
+    {{ form_row(form.detalletotal) }}
+{% endblock %}
+
+{% block _oe_facturabundle_factura_productos_entry_label %}
+{% endblock %}
+
+{% block _oe_facturabundle_factura_productos_entry_row %}
+    {% apply spaceless %}
+        <div class="col-md-5">
+            <div class="well products_add">
+                <button type="button" class="close_products">&times;</button>
+                {{ form_label(form) }}
+                {{ form_widget(form) }}
+                {{ form_errors(form)}}
+            </div>
+        </div>
+    {% endapply %}
+{% endblock %}
+
+{% block title_button %}
+    <h1 class="h3 mb-0 text-gray-800">Factura</h1>
+{% endblock %}
+
 {% block body %}
-    <h1>Factura creation</h1>
+    {{ form_start(form, {'attr': {'class': 'user'}, 'multipart': true }) }}
+        <div class="form-group col-md-6">
+            {{ form_label(form.facturanumero) }}
+            <div class="col-xs-12 col-sm-8">
+                {{ form_widget(form.facturanumero) }}
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            {{ form_label(form.facturafecha) }}
+            <div class="col-xs-12 col-sm-8">
+                {{ form_widget(form.facturafecha) }}
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            {{ form_label(form.clienteIdcliente) }}
+            <div class="col-xs-12 col-sm-8">
+                {{ form_widget(form.clienteIdcliente) }}
+            </div>
+        </div>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+        <div class="panel panel-primary">
+             <div class="panel-body">
+                <strong>PRODUCTOS</strong>
+            </div>
+            <div class="panel-footer">
+                 {{ form_row(form.productos) }}
+            </div>
+        </div>
+
+        <div class="form-group col-md-6">
+            {{ form_label(form.facturatotal) }}
+            <div class="col-xs-12 col-sm-8">
+                {{ form_widget(form.facturatotal) }}
+            </div>
+        </div>
+        </br>
+        <button type="submit" class="btn btn-success btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-check"></i>
+            </span>
+            <span class="text">AGREGAR</span>
+        </button>
     {{ form_end(form) }}
+{% endblock %}
 
-    <ul>
-        <li>
-            <a href="{{ path('factura_index') }}">Back to the list</a>
-        </li>
-    </ul>
+{% block javascripts %}
+    <script>
+
+        function addProductForm(collectionHolderProducts) {
+            // Get the data-prototype explained earlier
+            var prototype = collectionHolderProducts.data('prototype');
+
+            // get the new index
+            var index = collectionHolderProducts.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            collectionHolderProducts.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a address" link li
+            var $newFormLi = $('<div></div>').append(newForm);
+            collectionHolderProducts.append($newFormLi);
+
+            $('.products_add div.col-sm-5, .products_add div.col-xs-5').each(function(i,k){
+                $(k).removeClass('col-sm-5').addClass('col-sm-12')
+                $(k).removeClass('col-xs-5').addClass('col-sm-12')
+            })
+            $('.products_add label.col-xs-3').each(function(i,k){
+                $(k).removeClass('col-xs-3').addClass('col-sm-12')
+            })
+        }
+
+        // Get the div that holds the collection of addresses
+        var collectionHolderProducts = $('div#oe_facturabundle_factura_productos');
+
+        // setup an "add a address" link
+        var $newLinkLiProducts = $('<p class="col-md-12"><a href="#" class="btn btn-xs btn-info add_address_link"><i class="glyphicon glyphicon-plus glyphicon-white"></i> Agregar</a></p><br>');
+
+        $(function(){
+
+            // add the "add a address" anchor and li to the addresses div
+            collectionHolderProducts.append($newLinkLiProducts);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            collectionHolderProducts.data('index', collectionHolderProducts.find(':input').length);
+
+
+            $newLinkLiProducts.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new address form (see next code block)
+                addProductForm(collectionHolderProducts);
+            });
+
+            $(document).on('click', '.close_products', function(){
+                $(this).closest('.products_add').fadeOut(500, function() {                   
+                    $(this).parent().remove();
+                });
+            });
+        });
+
+        $(document).ready(function(){
+           
+        })
+    </script>
 {% endblock %}
