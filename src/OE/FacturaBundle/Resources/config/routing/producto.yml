@@ -22,3 +22,8 @@ producto_delete:
     path:     /{idproducto}/delete
     defaults: { _controller: "FacturaBundle:Producto:delete" }
     methods:  DELETE
+
+producto_getvalue:
+    path:     /getValueProduct
+    defaults: { _controller: "FacturaBundle:Producto:getValue" }
+    methods:  POST

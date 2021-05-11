@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/humane-js/3.2.2/themes/bigbox.min.css" integrity="sha512-CAn60pIXtNBqd0R/pXqP5AwPil3bvc24Mztw0pSUpFKQCOoKCvRJVwvdxHzmH0vldey0dKth9aIuZI63kCArwg==" crossorigin="anonymous" />
 {% endblock %}
 
 {% form_theme form _self %}
@@ -47,12 +48,31 @@
             </div>
         </div>
         <div class="col-6">
-            {{ form_label(form.clienteIdcliente) }}
+            {{ form_label(form.cliente.clientenit) }}
             <div class="form-group">
-                {{ form_widget(form.clienteIdcliente) }}
+                {{ form_widget(form.cliente.clientenit) }}
             </div>
         </div>
-
+        <div class="col-6">
+            {{ form_label(form.cliente.clientenombre) }}
+            <div class="form-group">
+                {{ form_widget(form.cliente.clientenombre) }}
+            </div>
+        </div>
+        <div class="col-6">
+            {{ form_label(form.cliente.clienteapellido) }}
+            <div class="form-group">
+                {{ form_widget(form.cliente.clienteapellido) }}
+            </div>
+        </div>
+        <div class="col-6">
+            {{ form_label(form.cliente.clientedireccion) }}
+            <div class="form-group">
+                {{ form_widget(form.cliente.clientedireccion) }}
+            </div>
+        </div>
+        
+        </br>
         <div class="panel panel-primary">
              <div class="panel-body">
                 <strong>PRODUCTOS</strong>
@@ -61,7 +81,8 @@
                  {{ form_row(form.productos) }}
             </div>
         </div>
-
+        
+        </br>
         <div class="col-md-6">
             {{ form_label(form.facturatotal) }}
             <div class="form-group">
@@ -80,17 +101,23 @@
 
 {% block javascripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/humane-js/3.2.2/humane.min.js" integrity="sha512-3W7bu3azLGmkjWCfU4rFRNjzBcNvTyOsJNz9p24ZAx65tA0+tvps8VaAsau1Yj7yNQr/D/HkeGMJfHmPN3MJDQ==" crossorigin="anonymous"></script>
     <script>
-        var id;
+        function sumSubtotal()
+        {
+            var total = 0;
+            $('.producto_adds_subtotal').each(function(i,c){
+                total += parseFloat($(c).val());
+            });
+            $('#oe_facturabundle_factura_facturatotal').val(total);
+        }
 
         function addProductForm(collectionHolderProducts) {
             // Get the data-prototype explained earlier
             var prototype = collectionHolderProducts.data('prototype');
 
             // get the new index
-            var index = collectionHolderProducts.data('index');
-            id = index;
-            console.log(id);
+            index = collectionHolderProducts.data('index');
 
             // Replace '__name__' in the prototype's HTML to
             // instead be a number based on how many items we have
@@ -103,13 +130,7 @@
             var $newFormLi = $('<div></div>').append(newForm);
             collectionHolderProducts.append($newFormLi);
 
-            $('.products_add div.col-sm-5, .products_add div.col-xs-5').each(function(i,k){
-                $(k).removeClass('col-sm-5').addClass('col-sm-12')
-                $(k).removeClass('col-xs-5').addClass('col-sm-12')
-            })
-            $('.products_add label.col-xs-3').each(function(i,k){
-                $(k).removeClass('col-xs-3').addClass('col-sm-12')
-            })
+            $('#oe_facturabundle_factura_productos_'+index+'_productoIdproducto').parent().parent().attr('data-idx', index);
         }
 
         // Get the div that holds the collection of addresses
@@ -139,10 +160,61 @@
             $(document).on('click', '.close_products', function(){
                 $(this).closest('.products_add').fadeOut(500, function() {                   
                     $(this).parent().remove();
+                    sumSubtotal();
                 });
             });
         });
 
+        $(document).on('focusout', 'input.producto_adds_value', function(){
+            var id = $(this).parent().parent().attr('data-idx');
+            var tvl = $(this).val();
+            var pid = $('#oe_facturabundle_factura_productos_'+id+'_productoIdproducto').val();
+
+            if(pid)
+            {
+                $.ajax({
+                    url: "{{ path('producto_getvalue') }}",
+                    method: "POST",
+                    data: { id: pid }
+                }).done(function(vl){
+                    var tt = vl * tvl;
+                    $('#oe_facturabundle_factura_productos_'+id+'_detalletotal').val(tt);
+                    sumSubtotal();
+                }).fail(function(){
+                    humane.log('¡Oops! ha ocurrido un error');
+                    $('#oe_facturabundle_factura_productos_'+id+'_detalletotal').val('');
+                    sumSubtotal();
+                })
+            }else{
+                humane.log('Debe de seleccionar un producto para realizar el cálculo');
+                $('#oe_facturabundle_factura_productos_'+id+'_detalletotal, #oe_facturabundle_factura_facturatotal').val('');
+            }
+        });
+
+        $(document).on('focusout', 'input#oe_facturabundle_factura_cliente_clientenit', function(){
+            var n = $(this).val();
+            var at = $(this).attr('readonly');
+            if(n)
+            {
+                $.getJSON("{{ path('checkNit') }}", { nit: n }, function(e){
+                    if(e != 0)
+                    {
+                        $('#oe_facturabundle_factura_cliente_clientenombre').val(e.clientenombre).attr('readonly', 'readonly');
+                        $('#oe_facturabundle_factura_cliente_clienteapellido').val(e.clienteapellido).attr('readonly', 'readonly');
+                        $('#oe_facturabundle_factura_cliente_clientedireccion').val(e.clientedireccion).attr('readonly', 'readonly');
+                        $('#oe_facturabundle_factura_clienteIdcliente').val(e.idcliente).attr('readonly', 'readonly');
+                    }else{
+                        $('#oe_facturabundle_factura_cliente_clientenombre, #oe_facturabundle_factura_cliente_clienteapellido, #oe_facturabundle_factura_cliente_clientedireccion, #oe_facturabundle_factura_clienteIdcliente').val('').removeAttr('readonly');
+                    }
+                });
+            }else{
+                humane.log('No olvide de colocar el NIT');
+                $('#oe_facturabundle_factura_cliente_clientenit').val('');
+            }
+        });
+
+    </script>
+    <script>
         $(document).ready(function(){
             $('#oe_facturabundle_factura_facturafecha').datepicker({
                 format: 'dd-mm-yyyy'

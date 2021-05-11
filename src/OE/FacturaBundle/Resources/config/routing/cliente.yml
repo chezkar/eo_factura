@@ -22,3 +22,7 @@ cliente_delete:
     path:     /{idcliente}/delete
     defaults: { _controller: "FacturaBundle:Cliente:delete" }
     methods:  DELETE
+
+checkNit:
+    path:     /checkNitCliente
+    defaults: { _controller: "FacturaBundle:Cliente:CheckNit" }

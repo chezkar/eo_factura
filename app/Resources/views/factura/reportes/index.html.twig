@@ -2,22 +2,55 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/tema/css/datatables/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/humane-js/3.2.2/themes/bigbox.min.css" integrity="sha512-CAn60pIXtNBqd0R/pXqP5AwPil3bvc24Mztw0pSUpFKQCOoKCvRJVwvdxHzmH0vldey0dKth9aIuZI63kCArwg==" crossorigin="anonymous" />
 {% endblock %}
 
 {% block title_button %}
     <h1 class="h3 mb-0 text-gray-800">Reporte de Facturas</h1>
+    <a id="search" href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-search fa-sm text-white-50"></i> Búscar</a>
 {% endblock %}
 
 {% block body %}
+    <div class="col-6">
+        <label for="facturafecha" class="required">Fecha</label>
+        <div class="form-group">
+            <input type="text" id="facturafecha" name="facturafecha" required="required" class="form-control" readonly="readonly">
+        </div>
+    </div>
 
+    <div id="tabla_facturas">
+
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     <script src="{{ asset('bundles/tema/js/helpers/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('bundles/tema/js/helpers/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/humane-js/3.2.2/humane.min.js" integrity="sha512-3W7bu3azLGmkjWCfU4rFRNjzBcNvTyOsJNz9p24ZAx65tA0+tvps8VaAsau1Yj7yNQr/D/HkeGMJfHmPN3MJDQ==" crossorigin="anonymous"></script>
     <script>
      $(document).ready(function(){
-         
+        $('#facturafecha').datepicker({
+            format: 'dd-mm-yyyy'
+        });
+
+        $('#search').click(function(e){
+            e.preventDefault();
+            var dt= $('#facturafecha').val();
+
+            if(dt)
+            {
+                $.ajax({
+                    url: "{{ path('factura_get_date') }}",
+                    method: "POST",
+                    data: { dt: dt  }
+                })
+            }else{
+                humane.log('Debe de escoger una fecha para operar');
+            }
+        })
+
      })
     </script>
 {% endblock %}

@@ -30,5 +30,5 @@ factura_reporte_index:
 
 factura_get_date:
     path:     /reportes/factura
-    defaults: { _controller: "FacutraBundle:Reportes:getFactura" }
+    defaults: { _controller: "FacturaBundle:Reportes:getFactura" }
     methods:  POST

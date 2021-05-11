@@ -4,7 +4,9 @@ namespace OE\FacturaBundle\Controller;
 
 use OE\FacturaBundle\Entity\Cliente;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Cliente controller.
@@ -120,5 +122,23 @@ class ClienteController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    public function checkNitAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $nit = $request->query->get('nit');
+
+        $r = $em->createQuery('
+                SELECT c.idcliente, c.clientenombre, c.clienteapellido, c.clientedireccion 
+                FROM FacturaBundle:Cliente AS c
+                WHERE c.clientenit = ?1')->setParameter(1, $nit);
+        $client = $r->setMaxResults(1)->getOneOrNullResult();
+
+        if ($client) {
+            return new JsonResponse($client);
+        }else{
+            return new Response(0);
+        }
     }
 }

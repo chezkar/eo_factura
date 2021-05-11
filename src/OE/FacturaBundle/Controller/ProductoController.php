@@ -5,6 +5,7 @@ namespace OE\FacturaBundle\Controller;
 use OE\FacturaBundle\Entity\Producto;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Producto controller.
@@ -120,5 +121,16 @@ class ProductoController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+
+    public function getValueAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->request->get('id');
+
+        $producto = $em->getRepository('FacturaBundle:Producto')->find($id);
+
+        return new Response($producto->getProductoprecio());
     }
 }
