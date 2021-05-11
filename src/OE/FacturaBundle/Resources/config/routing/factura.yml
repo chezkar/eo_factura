@@ -22,3 +22,13 @@ factura_delete:
     path:     /{idfactura}/delete
     defaults: { _controller: "FacturaBundle:Factura:delete" }
     methods:  DELETE
+
+factura_reporte_index:
+    path:     /reportes
+    defaults: { _controller: "FacturaBundle:Reportes:index" }
+    methods:  GET
+
+factura_get_date:
+    path:     /reportes/factura
+    defaults: { _controller: "FacutraBundle:Reportes:getFactura" }
+    methods:  POST

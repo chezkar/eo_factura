@@ -1,6 +1,7 @@
 <?php
 
 namespace OE\FacturaBundle\Entity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -9,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="cliente", uniqueConstraints={@ORM\UniqueConstraint(name="clienteNit_UNIQUE", columns={"clienteNit"})})
  * @ORM\Entity
+ * @UniqueEntity(fields="clientenit", message="El número de NIT ya existe")
  */
 class Cliente
 {

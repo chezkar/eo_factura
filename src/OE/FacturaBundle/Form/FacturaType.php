@@ -9,6 +9,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class FacturaType extends AbstractType
 {
@@ -18,8 +20,15 @@ class FacturaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('facturanumero', null, [])
-            ->add('facturafecha', null, [])
+            ->add('facturanumero', null, ['label' => 'Correlativo','attr' => ['class' => 'form-control']])
+            ->add('facturafecha', DateType::class, [
+                'label' => 'Fecha',
+                'data' => new \DateTime(),
+                'widget' => 'single_text',
+                'format' => 'dd-MM-yyyy',
+                'required' => true,
+                'attr' => ['class' => 'form-control', 'readonly' => true]
+                ])
             ->add('clienteIdcliente', EntityType::class, array(
                 'class' => 'FacturaBundle:Cliente',
                 'required' => true))
@@ -32,7 +41,7 @@ class FacturaType extends AbstractType
                 'allow_delete'   => true,
                 'allow_add'      => true
             ])
-            ->add('facturatotal', null, [])
+            ->add('facturatotal', null, ['attr' => ['class' => 'form-control', 'readonly' => true]])
             ;
     }/**
      * {@inheritdoc}

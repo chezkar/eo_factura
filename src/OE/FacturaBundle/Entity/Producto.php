@@ -1,6 +1,7 @@
 <?php
 
 namespace OE\FacturaBundle\Entity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -9,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="producto", uniqueConstraints={@ORM\UniqueConstraint(name="productoCodigo_UNIQUE", columns={"productoCodigo"})})
  * @ORM\Entity
+ * @UniqueEntity(fields="productocodigo", message="El código de producto ya existe")
  */
 class Producto
 {

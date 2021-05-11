@@ -1,6 +1,7 @@
 <?php
 
 namespace OE\FacturaBundle\Entity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -9,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="factura", uniqueConstraints={@ORM\UniqueConstraint(name="compraNumero_UNIQUE", columns={"facturaNumero"})}, indexes={@ORM\Index(name="fk_factura_cliente_idx", columns={"cliente_idcliente"})})
  * @ORM\Entity
+ * @UniqueEntity(fields="facturanumero", message="El número de correlativo ya existe")
  */
 class Factura
 {

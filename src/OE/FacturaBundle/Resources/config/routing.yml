@@ -13,3 +13,7 @@ factura_cliente:
 factura_factura:
     resource: "@FacturaBundle/Resources/config/routing/factura.yml"
     prefix:   /factura
+
+factura_ws:
+    path:     /ws
+    defaults: { _controller: FacturaBundle:WebService:index }
