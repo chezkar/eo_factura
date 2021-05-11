@@ -41,13 +41,20 @@
 
             if(dt)
             {
+                $('#tabla_facturas').slideToggle();
                 $.ajax({
                     url: "{{ path('factura_get_date') }}",
                     method: "POST",
                     data: { dt: dt  }
+                }).done(function(inv){
+                    $('#tabla_facturas').slideToggle().html(inv);
+                }).fail(function(){
+                    $('#tabla_facturas').slideToggle();
+                    humane.log('¡Oops! ha ocurrido un error');
                 })
             }else{
                 humane.log('Debe de escoger una fecha para operar');
+                $('#tabla_facturas').slideToggle();
             }
         })
 

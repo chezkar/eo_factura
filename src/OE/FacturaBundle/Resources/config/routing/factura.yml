@@ -32,3 +32,7 @@ factura_get_date:
     path:     /reportes/factura
     defaults: { _controller: "FacturaBundle:Reportes:getFactura" }
     methods:  POST
+
+factura_pdf:
+    path:     /pdf_{idfactura}_convert
+    defaults: { _controller: "FacturaBundle:ConvertirPDF:getPDF" }

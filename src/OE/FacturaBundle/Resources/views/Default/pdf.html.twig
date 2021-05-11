@@ -1,0 +1,43 @@
+{% extends 'basetopdf.html.twig' %}
+{% block title %}{{ dt }}{% endblock %}
+
+{% block body %}
+    <table>
+        <tr><td><img src="{{ absolute_url(asset('bundles/tema/img/oe_logo.jfif')) }}" width="300"></td></tr>
+        <tr>
+            <th>CORRELATIVO</th>
+            <td>{{ factura.facturanumero }}</td>
+            <th>FECHA</th>
+            <td>{{ factura.facturafecha|date('d-m-Y') }}</td>
+        </tr>
+        <tr>
+            <th colspan="4">CLIENTE</th>
+        </tr>
+        <tr>
+            <td>{{ factura.clienteIdcliente.clientenit }}</td>
+            <td>{{ factura.clienteIdcliente.clientenombre }}</td>
+            <td>{{ factura.clienteIdcliente.clienteapellido }}</td>
+            <td>{{ factura.clienteIdcliente.clientedireccion }}</td>
+        </tr>
+        <tr>
+            <th colspan="4">PRODUCTOS</th>
+        </tr>
+        {% for producto in factura.productos %}
+            <tr>
+                <td colspan="4">
+                    <table>
+                        <tr>
+                            <td><strong>CÓDIGO</strong>: {{ producto.productoIdproducto.productocodigo }} {{ producto.productoIdproducto.productodescripcion }}</td>
+                            <td><strong>CANTIDAD</strong>: {{ producto.detallecantidad }}</td>
+                            <td><strong>SUBTOTAL</strong>: Q {{ producto.detalletotal }}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <th>TOTAL</th>
+            <td colspan="3">Q {{ factura.facturatotal }}</td>
+        </tr>
+    </table>
+{% endblock %}

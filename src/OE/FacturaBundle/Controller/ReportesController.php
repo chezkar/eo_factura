@@ -17,14 +17,14 @@ class ReportesController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $ft = explode('-', $request->request->get('dt'));
-        $fecha = $ft[1].'-'.$ft[0].'-'.$ft[2];
+        $fecha = $ft[2].'-'.$ft[1].'-'.$ft[0];
 
         $r = $em->createQuery('
             SELECT r FROM FacturaBundle:Factura AS r
             WHERE r.facturafecha = ?1')->setParameter(1, $fecha);
         $invoices = $r->getResult();
 
-        return $this->render('factura\reportes\facturas.html.twig');
+        return $this->render('factura\reportes\facturas.html.twig', ['facturas' => $invoices]);
     }
 
 }

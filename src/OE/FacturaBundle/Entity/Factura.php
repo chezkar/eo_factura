@@ -49,7 +49,7 @@ class Factura
      *
      * @ORM\ManyToOne(targetEntity="OE\FacturaBundle\Entity\Cliente")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cliente_idcliente", referencedColumnName="idcliente", nullable=true)
+     *   @ORM\JoinColumn(name="cliente_idcliente", referencedColumnName="idcliente", nullable=false)
      * })
      */
     private $clienteIdcliente;
@@ -183,7 +183,7 @@ class Factura
      */
     public function addProducto(\OE\FacturaBundle\Entity\DetalleFactura $productos)
     {
-        $this->productos[] = $productos;
+        $this->productos[] = $productos->setFacturaIdfactura($this);
 
         return $this;
     }

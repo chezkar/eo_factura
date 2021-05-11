@@ -1,0 +1,31 @@
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Correlativo</th>
+                <th>NIT</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for factura in facturas %}
+            <tr>
+                <td>{{ factura.facturanumero }}</td>
+                <td>{{ factura.clienteIdcliente.clientenit }}</td>
+                <td>{{ factura.clienteIdcliente.clienteapellido }}, {{ factura.clienteIdcliente.clientenombre }}</td>
+                <td>{{ factura.clienteIdcliente.clientedireccion }}</td>
+                <td>{{ factura.facturatotal }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a target="_blank" href="{{ path('factura_pdf', { 'idfactura': factura.idfactura }) }}" class="fas fa-file-pdf">PDF</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
