@@ -20,7 +20,7 @@ class FacturaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('facturanumero', null, ['label' => 'Correlativo','attr' => ['class' => 'form-control']])
+            ->add('facturanumero', null, ['label' => 'Correlativo','label_attr' => ['class' => 'form-label'], 'attr' => ['class' => 'form-control']])
             ->add('facturafecha', DateType::class, [
                 'label' => 'Fecha',
                 'data' => new \DateTime(),

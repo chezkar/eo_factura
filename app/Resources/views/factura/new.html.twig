@@ -34,19 +34,19 @@
 
 {% block body %}
     {{ form_start(form, {'attr': {'class': 'user'}, 'multipart': true }) }}
-        <div class="col-md-6">
+        <div class="col-6">
             {{ form_label(form.facturanumero) }}
             <div class="form-group">
                 {{ form_widget(form.facturanumero) }}
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-6">
             {{ form_label(form.facturafecha) }}
             <div class="form-group">
                 {{ form_widget(form.facturafecha) }}
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-6">
             {{ form_label(form.clienteIdcliente) }}
             <div class="form-group">
                 {{ form_widget(form.clienteIdcliente) }}
@@ -81,6 +81,7 @@
 {% block javascripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script>
+        var id;
 
         function addProductForm(collectionHolderProducts) {
             // Get the data-prototype explained earlier
@@ -88,6 +89,8 @@
 
             // get the new index
             var index = collectionHolderProducts.data('index');
+            id = index;
+            console.log(id);
 
             // Replace '__name__' in the prototype's HTML to
             // instead be a number based on how many items we have

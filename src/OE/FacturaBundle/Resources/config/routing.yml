@@ -17,3 +17,7 @@ factura_factura:
 factura_ws:
     path:     /ws
     defaults: { _controller: FacturaBundle:WebService:index }
+
+factura_ws_page:
+    path:     /ws/getPages
+    defaults: { _controller: FacturaBundle:WebService:getWSPage }

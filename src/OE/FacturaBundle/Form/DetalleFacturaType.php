@@ -19,10 +19,11 @@ class DetalleFacturaType extends AbstractType
             ->add('productoIdproducto', EntityType::class, array(
                 'label' => 'Producto',
                 'placeholder' => 'Seleccione el producto',
-                'class' => 'FacturaBundle:Producto'
+                'class' => 'FacturaBundle:Producto',
+                'attr' => ['class' => 'form-control']
             ))
-            ->add('detallecantidad')
-            ->add('detalletotal')
+            ->add('detallecantidad', null, ['label' => 'Cantidad', 'attr' => ['class' => 'form-control']])
+            ->add('detalletotal', null, ['label' => 'SubTotal', 'attr' => ['class' => 'form-control', 'readonly' => true]])
             ;
     }/**
      * {@inheritdoc}

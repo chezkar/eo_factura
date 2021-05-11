@@ -5,13 +5,41 @@
 {% endblock %}
 
 {% block body %}
+    <div class="content_ws">
+    {% for user in content %}
+        <img src="{{ user.avatar }}" class="rounded" alt="{{ user.first_name }} {{ user.last_name }}">
+    {% endfor %}
+    </div>
 
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            {% for i in 1..ttps  %}
+                <li class="page-item"><a class="page-link page-number" href="#">{{ i }}</a></li>
+                {% set i = i + 1 %}
+            {% endfor %}
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
 {% endblock %}
 
 {% block javascripts %}
     <script>
      $(document).ready(function(){
-         
+         $('.page-number').click(function(e){
+             e.preventDefault();
+             $('div.content_ws').slideToggle();
+             var pg = $(this).text();
+             $.ajax({
+                url: "{{ path('factura_ws_page') }}",
+                method: "POST",
+                data: { pages: pg }
+            }).done(function(ws){
+                $('div.content_ws').slideToggle().html(ws);
+            }).fail(function(){
+                $('div.content_ws').slideToggle()
+            })
+         })
      })
     </script>
 {% endblock %}
