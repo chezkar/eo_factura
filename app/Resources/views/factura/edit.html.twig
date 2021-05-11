@@ -1,9 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    <h1>Factura edit</h1>
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/humane-js/3.2.2/themes/bigbox.min.css" integrity="sha512-CAn60pIXtNBqd0R/pXqP5AwPil3bvc24Mztw0pSUpFKQCOoKCvRJVwvdxHzmH0vldey0dKth9aIuZI63kCArwg==" crossorigin="anonymous" />
+{% endblock %}
 
-    {{ form_start(edit_form) }}
+{% form_theme edit_form _self %}
+
+{% block _oe_facturabundle_factura_productos_entry_widget %}
+    {{ form_row(form.productoIdproducto) }}
+    {{ form_row(form.detallecantidad) }}
+    {{ form_row(form.detalletotal) }}
+{% endblock %}
+
+{% block _oe_facturabundle_factura_productos_entry_label %}
+{% endblock %}
+
+{% block _oe_facturabundle_factura_productos_entry_row %}
+    {% apply spaceless %}
+        <div class="col-md-5">
+            <div class="well products_add">
+                <button type="button" class="close_products">&times;</button>
+                {{ form_label(form) }}
+                {{ form_widget(form) }}
+                {{ form_errors(form)}}
+            </div>
+        </div>
+    {% endapply %}
+{% endblock %}
+
+{% block title_button %}
+    <h1 class="h3 mb-0 text-gray-800">Factura</h1>
+{% endblock %}
+
+{% block body %}
+    {{ form_start(edit_form, {'attr': {'class': 'user'}, 'multipart': true }) }}
         {{ form_widget(edit_form) }}
         <input type="submit" value="Edit" />
     {{ form_end(edit_form) }}
@@ -18,4 +49,128 @@
             {{ form_end(delete_form) }}
         </li>
     </ul>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/humane-js/3.2.2/humane.min.js" integrity="sha512-3W7bu3azLGmkjWCfU4rFRNjzBcNvTyOsJNz9p24ZAx65tA0+tvps8VaAsau1Yj7yNQr/D/HkeGMJfHmPN3MJDQ==" crossorigin="anonymous"></script>
+    <script>
+        function sumSubtotal()
+        {
+            var total = 0;
+            $('.producto_adds_subtotal').each(function(i,c){
+                total += parseFloat($(c).val());
+            });
+            $('#oe_facturabundle_factura_facturatotal').val(total);
+        }
+
+        function addProductForm(collectionHolderProducts) {
+            // Get the data-prototype explained earlier
+            var prototype = collectionHolderProducts.data('prototype');
+
+            // get the new index
+            index = collectionHolderProducts.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            collectionHolderProducts.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a address" link li
+            var $newFormLi = $('<div></div>').append(newForm);
+            collectionHolderProducts.append($newFormLi);
+
+            $('#oe_facturabundle_factura_productos_'+index+'_productoIdproducto').parent().parent().attr('data-idx', index);
+        }
+
+        // Get the div that holds the collection of addresses
+        var collectionHolderProducts = $('div#oe_facturabundle_factura_productos');
+
+        // setup an "add a address" link
+        var $newLinkLiProducts = $('<p class="col-md-12"><a href="#" class="btn btn-xs btn-info add_address_link"><i class="fas fa-plus"></i> Agregar</a></p><br>');
+
+        $(function(){
+
+            // add the "add a address" anchor and li to the addresses div
+            collectionHolderProducts.append($newLinkLiProducts);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            collectionHolderProducts.data('index', collectionHolderProducts.find(':input').length);
+
+
+            $newLinkLiProducts.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new address form (see next code block)
+                addProductForm(collectionHolderProducts);
+            });
+
+            $(document).on('click', '.close_products', function(){
+                $(this).closest('.products_add').fadeOut(500, function() {                   
+                    $(this).parent().remove();
+                    sumSubtotal();
+                });
+            });
+        });
+
+        $(document).on('focusout', 'input.producto_adds_value', function(){
+            var id = $(this).parent().parent().attr('data-idx');
+            var tvl = $(this).val();
+            var pid = $('#oe_facturabundle_factura_productos_'+id+'_productoIdproducto').val();
+
+            if(pid)
+            {
+                $.ajax({
+                    url: "{{ path('producto_getvalue') }}",
+                    method: "POST",
+                    data: { id: pid }
+                }).done(function(vl){
+                    var tt = vl * tvl;
+                    $('#oe_facturabundle_factura_productos_'+id+'_detalletotal').val(tt);
+                    sumSubtotal();
+                }).fail(function(){
+                    humane.log('¡Oops! ha ocurrido un error');
+                    $('#oe_facturabundle_factura_productos_'+id+'_detalletotal').val('');
+                    sumSubtotal();
+                })
+            }else{
+                humane.log('Debe de seleccionar un producto para realizar el cálculo');
+                $('#oe_facturabundle_factura_productos_'+id+'_detalletotal, #oe_facturabundle_factura_facturatotal').val('');
+            }
+        });
+
+        $(document).on('focusout', 'input#oe_facturabundle_factura_cliente_clientenit', function(){
+            var n = $(this).val();
+            var at = $(this).attr('readonly');
+            if(n)
+            {
+                $.getJSON("{{ path('checkNit') }}", { nit: n }, function(e){
+                    if(e != 0)
+                    {
+                        $('#oe_facturabundle_factura_cliente_clientenombre').val(e.clientenombre).attr('readonly', 'readonly');
+                        $('#oe_facturabundle_factura_cliente_clienteapellido').val(e.clienteapellido).attr('readonly', 'readonly');
+                        $('#oe_facturabundle_factura_cliente_clientedireccion').val(e.clientedireccion).attr('readonly', 'readonly');
+                        $('#oe_facturabundle_factura_clienteIdcliente').val(e.idcliente).attr('readonly', 'readonly');
+                    }else{
+                        $('#oe_facturabundle_factura_cliente_clientenombre, #oe_facturabundle_factura_cliente_clienteapellido, #oe_facturabundle_factura_cliente_clientedireccion, #oe_facturabundle_factura_clienteIdcliente').val('').removeAttr('readonly');
+                    }
+                });
+            }else{
+                humane.log('No olvide de colocar el NIT');
+                $('#oe_facturabundle_factura_cliente_clientenit').val('');
+            }
+        });
+
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('#oe_facturabundle_factura_facturafecha').datepicker({
+                format: 'dd-mm-yyyy'
+            });
+        })
+    </script>
 {% endblock %}

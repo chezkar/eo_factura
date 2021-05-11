@@ -7,7 +7,7 @@
 {% block body %}
     <div class="content_ws">
     {% for user in content %}
-        <img src="{{ user.avatar }}" class="rounded" alt="{{ user.first_name }} {{ user.last_name }}">
+        <img src="{{ user.avatar }}" data-id="{{ user.id }}" class="rounded users" alt="{{ user.first_name }} {{ user.last_name }}">
     {% endfor %}
     </div>
     </br>
@@ -39,9 +39,31 @@
             }).done(function(ws){
                 $('div.content_ws').slideToggle().html(ws);
             }).fail(function(){
-                $('div.content_ws').slideToggle()
+                $('div.content_ws').slideToggle();
             })
-         })
+         });
+        
+        $('.users').click(function(){
+            var id = $(this).data('id');
+            $.ajax({
+                url: "https://reqres.in/api/users/"+id,
+                type: "GET",
+                dataType: "json",
+                success: function(response){
+                    var body = "<div>";
+                    body += '<img src="'+response['data'].avatar+'" class="img-circle">';
+                    body += '<p><span>'+response['data'].last_name+', '+response['data'].first_name+'</span><p>';
+                    body += '<p><span>'+response['data'].email+'</span><p>';
+                    body += '</div>';
+                    console.log(body);
+                    $('#myModal').on('shown.bs.modal', function (e) {
+                        if (!body) return e.preventDefault();
+                        $('#myModal .modal-body').html(body);
+                    });
+                    $('#myModal').modal('handleUpdate').modal('show');
+                }
+            });
+        });
      })
     </script>
 {% endblock %}
